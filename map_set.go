@@ -4,7 +4,6 @@ import "fmt"
 
 type MapSet struct{ m map[int]struct{} }
 
-// IsEmpty does what you'd expect it to do...
 func (set MapSet) IsEmpty() bool {
 	return len(set.m) == 0
 }

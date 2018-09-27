@@ -4,7 +4,6 @@ import "fmt"
 
 type SliceSet []int
 
-// IsEmpty does what you'd expect it to do...
 func (set SliceSet) IsEmpty() bool {
 	return len(set) == 0
 }
