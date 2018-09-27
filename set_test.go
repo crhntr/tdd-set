@@ -12,32 +12,32 @@ type Set interface {
 	Remove(elem int) bool
 }
 
-func TestSets(t *testing.T) {
-	t.Run("MapSet", testSet(t, func() Set { return &MapSet{} }))
-	t.Run("SliceSet", testSet(t, func() Set { return &SliceSet{} }))
-	t.Run("LLSet", testSet(t, func() Set { return &LLSet{} }))
+func Test(t *testing.T) {
+	t.Run("MapSet", testFanOut(t, func() Set { return &MapSet{} }))
+	t.Run("SliceSet", testFanOut(t, func() Set { return &SliceSet{} }))
+	t.Run("LLSet", testFanOut(t, func() Set { return &LLSet{} }))
 }
 
-func testSet(t *testing.T, getSet func() Set) func(*testing.T) {
+func testFanOut(t *testing.T, emptySetConstructor func() Set) func(*testing.T) {
 	return func(t *testing.T) {
-		testSet_IsEmpty(t, getSet)
-		testSet_Contains(t, getSet)
-		testSet_Insert(t, getSet)
-		testSet_Remove(t, getSet)
-		testSet_String(t, getSet)
+		t.Run("IsEmpty", func(t *testing.T) { testSet_IsEmpty(t, emptySetConstructor) })
+		t.Run("Contains", func(t *testing.T) { testSet_Contains(t, emptySetConstructor) })
+		t.Run("Insert", func(t *testing.T) { testSet_Insert(t, emptySetConstructor) })
+		t.Run("Remove", func(t *testing.T) { testSet_Remove(t, emptySetConstructor) })
+		t.Run("String", func(t *testing.T) { testSet_String(t, emptySetConstructor) })
 	}
 }
 
-func testSet_IsEmpty(t *testing.T, getSet func() Set) {
-	t.Run("when an empty set is created", func(t *testing.T) {
-		set := getSet()
+func testSet_IsEmpty(t *testing.T, newEmptySet func() Set) {
+	t.Run("when a new set is empty", func(t *testing.T) {
+		set := newEmptySet()
 		if !set.IsEmpty() {
 			t.Error("it should be empty")
 		}
 	})
 
 	t.Run("when a set has had an element inserted", func(t *testing.T) {
-		set := getSet()
+		set := newEmptySet()
 		set.Insert(420)
 
 		if set.IsEmpty() {
@@ -46,16 +46,16 @@ func testSet_IsEmpty(t *testing.T, getSet func() Set) {
 	})
 }
 
-func testSet_Contains(t *testing.T, getSet func() Set) {
-	t.Run("when an empty set is created", func(t *testing.T) {
-		set := getSet()
+func testSet_Contains(t *testing.T, newEmptySet func() Set) {
+	t.Run("when a new set is empty", func(t *testing.T) {
+		set := newEmptySet()
 		if set.Contains(420) {
 			t.Error("it should not contain an element")
 		}
 	})
 
 	t.Run("when a set has an element inserted", func(t *testing.T) {
-		set := getSet()
+		set := newEmptySet()
 		set.Insert(420)
 
 		if !set.Contains(420) {
@@ -64,16 +64,16 @@ func testSet_Contains(t *testing.T, getSet func() Set) {
 	})
 }
 
-func testSet_Insert(t *testing.T, getSet func() Set) {
-	t.Run("when an empty set is created", func(t *testing.T) {
-		set := getSet()
+func testSet_Insert(t *testing.T, newEmptySet func() Set) {
+	t.Run("when a new set is empty", func(t *testing.T) {
+		set := newEmptySet()
 		if set.Insert(420) != true {
 			t.Error("it should allow adding a value")
 		}
 	})
 
 	t.Run("when a set already has an element", func(t *testing.T) {
-		set := getSet()
+		set := newEmptySet()
 		set.Insert(420)
 		if set.Insert(420) {
 			t.Error("it should not allow adding an element twice")
@@ -81,16 +81,16 @@ func testSet_Insert(t *testing.T, getSet func() Set) {
 	})
 }
 
-func testSet_Remove(t *testing.T, getSet func() Set) {
-	t.Run("when an empty set is created", func(t *testing.T) {
-		set := getSet()
+func testSet_Remove(t *testing.T, newEmptySet func() Set) {
+	t.Run("when a new set is empty", func(t *testing.T) {
+		set := newEmptySet()
 		if set.Remove(420) == true {
 			t.Error("it should not allow an element to be removed")
 		}
 	})
 
-	t.Run("when an empty set is created", func(t *testing.T) {
-		set := getSet()
+	t.Run("when a set is contains one element", func(t *testing.T) {
+		set := newEmptySet()
 		set.Insert(420)
 		if set.Remove(420) == false {
 			t.Error("it should not allow an element to be removed")
@@ -98,7 +98,7 @@ func testSet_Remove(t *testing.T, getSet func() Set) {
 	})
 
 	t.Run("when an existing element is removed", func(t *testing.T) {
-		set := getSet()
+		set := newEmptySet()
 		set.Insert(420)
 		set.Remove(420)
 		if set.Remove(420) == true {
@@ -106,8 +106,8 @@ func testSet_Remove(t *testing.T, getSet func() Set) {
 		}
 	})
 
-	t.Run("when an existing element is removed from a len(set) > 1", func(t *testing.T) {
-		set := getSet()
+	t.Run("when an existing element is removed from a larger set", func(t *testing.T) {
+		set := newEmptySet()
 
 		set.Insert(0)
 		set.Insert(420)
@@ -120,8 +120,8 @@ func testSet_Remove(t *testing.T, getSet func() Set) {
 	})
 }
 
-func testSet_String(t *testing.T, getSet func() Set) {
-	set := getSet()
+func testSet_String(t *testing.T, newEmptySet func() Set) {
+	set := newEmptySet()
 	set.Insert(420)
 	fmt.Sprint(set)
 }
