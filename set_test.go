@@ -1,8 +1,10 @@
-package gorpi
+package gorpi_test
 
 import (
 	"fmt"
 	"testing"
+
+	"github.com/crhntr/gorpi"
 )
 
 type Set interface {
@@ -13,9 +15,9 @@ type Set interface {
 }
 
 func Test(t *testing.T) {
-	t.Run("MapSet", testFanOut(t, func() Set { return &MapSet{} }))
-	t.Run("SliceSet", testFanOut(t, func() Set { return &SliceSet{} }))
-	t.Run("LLSet", testFanOut(t, func() Set { return &LLSet{} }))
+	t.Run("MapSet", testFanOut(t, func() Set { return &gorpi.MapSet{} }))
+	t.Run("SliceSet", testFanOut(t, func() Set { return &gorpi.SliceSet{} }))
+	t.Run("LLSet", testFanOut(t, func() Set { return &gorpi.LLSet{} }))
 }
 
 func testFanOut(t *testing.T, emptySetConstructor func() Set) func(*testing.T) {
