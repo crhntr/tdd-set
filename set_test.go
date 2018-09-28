@@ -16,7 +16,7 @@ type Set interface {
 	SelectOne() (int, error)
 }
 
-func Test(t *testing.T) {
+func TestBehavior(t *testing.T) {
 	t.Run("MapSet", testFanOut(t, func() Set { return &gorpi.MapSet{} }))
 	t.Run("SliceSet", testFanOut(t, func() Set { return &gorpi.SliceSet{} }))
 	t.Run("LLSet", testFanOut(t, func() Set { return &gorpi.LLSet{} }))
