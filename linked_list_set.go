@@ -1,6 +1,9 @@
 package gorpi
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type LLSet struct {
 	head *Node
@@ -66,6 +69,15 @@ func (set *LLSet) Remove(elem int) bool {
 		current = current.next
 	}
 	return false
+}
+
+func (set *LLSet) SelectOne() (int, error) {
+	if set.IsEmpty() {
+		return 0, errors.New("set is empty")
+	}
+	elem := set.head.data
+	set.head = set.head.next
+	return elem, nil
 }
 
 func (set LLSet) String() string {

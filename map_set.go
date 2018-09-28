@@ -1,6 +1,9 @@
 package gorpi
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type MapSet struct{ m map[int]struct{} }
 
@@ -32,6 +35,19 @@ func (set MapSet) Remove(elem int) bool {
 	}
 	delete(set.m, elem)
 	return true
+}
+
+func (set MapSet) SelectOne() (int, error) {
+	if set.IsEmpty() {
+		return 0, errors.New("set is empty")
+	}
+	var elem int
+	for el, _ := range set.m {
+		elem = el
+		break
+	}
+	set.Remove(elem)
+	return elem, nil
 }
 
 func (set MapSet) String() string {

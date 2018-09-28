@@ -1,6 +1,9 @@
 package gorpi
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type SliceSet []int
 
@@ -24,6 +27,15 @@ func (set *SliceSet) Insert(elem int) bool {
 	}
 	(*set) = append((*set), elem)
 	return true
+}
+
+func (set *SliceSet) SelectOne() (int, error) {
+	if set.IsEmpty() {
+		return 0, errors.New("set is empty")
+	}
+	elem := (*set)[0]
+	set.Remove(elem)
+	return elem, nil
 }
 
 // Remove returns true if elem was removed

@@ -2,6 +2,7 @@ package gorpi_test
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 
 	"github.com/crhntr/gorpi"
@@ -12,6 +13,7 @@ type Set interface {
 	Contains(elem int) bool
 	Insert(elem int) bool
 	Remove(elem int) bool
+	SelectOne() (int, error)
 }
 
 func Test(t *testing.T) {
@@ -26,6 +28,7 @@ func testFanOut(t *testing.T, emptySetConstructor func() Set) func(*testing.T) {
 		t.Run("Contains", func(t *testing.T) { testSet_Contains(t, emptySetConstructor) })
 		t.Run("Insert", func(t *testing.T) { testSet_Insert(t, emptySetConstructor) })
 		t.Run("Remove", func(t *testing.T) { testSet_Remove(t, emptySetConstructor) })
+		t.Run("SelectOne", func(t *testing.T) { testSet_SelectOne(t, emptySetConstructor) })
 		t.Run("String", func(t *testing.T) { testSet_String(t, emptySetConstructor) })
 	}
 }
@@ -118,6 +121,55 @@ func testSet_Remove(t *testing.T, newEmptySet func() Set) {
 		set.Remove(420)
 		if set.Remove(420) == true {
 			t.Error("it should not allow you to remove it again")
+		}
+	})
+}
+
+func testSet_SelectOne(t *testing.T, newEmptySet func() Set) {
+	t.Run("when a new set is empty", func(t *testing.T) {
+		set := newEmptySet()
+
+		_, err := set.SelectOne()
+		if err == nil {
+			t.Error("it should return an error")
+		}
+	})
+
+	t.Run("when a set has one number", func(t *testing.T) {
+		set := newEmptySet()
+
+		num := rand.Int()
+		set.Insert(num)
+
+		elem, err := set.SelectOne()
+		if err != nil {
+			t.Error("it should not return an error")
+			t.Log(err)
+		}
+		if elem != num {
+			t.Error("it should return the only number it has")
+			t.Logf("i got a %d", elem)
+		}
+		if !set.IsEmpty() {
+			t.Error("it ACTUALLY remove an element")
+		}
+	})
+
+	t.Run("when a set has multiple elements", func(t *testing.T) {
+		set := newEmptySet()
+
+		set.Insert(1)
+		set.Insert(2)
+		set.Insert(3)
+
+		_, err := set.SelectOne()
+		if err != nil {
+			t.Error("it should not return an error")
+			t.Log(err)
+		}
+
+		if set.IsEmpty() {
+			t.Error("it should not be empty")
 		}
 	})
 }
