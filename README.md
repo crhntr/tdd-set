@@ -1,6 +1,13 @@
 # gorpi
 A Set Implemented in Multiple Ways in Go With BDD Style Tests Using Only The Standard Library
 
+A friend of mine wanted to be introduced to practice pair programming, Go, and
+[RPIs (Rob’s Pairing Interview)](https://builttoadapt.io/the-developer-hiring-process-is-broken-672bf273c183) in preparation for an interview. So the initial version of this codebase
+was the result of that pairing session. We paired for a little under two hours.
+Subsequently, I spent a about two hours finishing the linked list and writing
+the map implementation. I also refactored the test suite to follow a more BDD
+style.
+
 
 ## Example Test Output
 ```
