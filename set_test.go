@@ -17,12 +17,12 @@ type Set interface {
 }
 
 func TestBehavior(t *testing.T) {
-	t.Run("MapSet", testFanOut(t, func() Set { return &gorpi.MapSet{} }))
-	t.Run("SliceSet", testFanOut(t, func() Set { return &gorpi.SliceSet{} }))
-	t.Run("LLSet", testFanOut(t, func() Set { return &gorpi.LLSet{} }))
+	t.Run("MapSet", injectSetToTests(t, func() Set { return &gorpi.MapSet{} }))
+	t.Run("SliceSet", injectSetToTests(t, func() Set { return &gorpi.SliceSet{} }))
+	t.Run("LLSet", injectSetToTests(t, func() Set { return &gorpi.LLSet{} }))
 }
 
-func testFanOut(t *testing.T, emptySetConstructor func() Set) func(*testing.T) {
+func injectSetToTests(t *testing.T, emptySetConstructor func() Set) func(*testing.T) {
 	return func(t *testing.T) {
 		t.Run("IsEmpty", func(t *testing.T) { testSet_IsEmpty(t, emptySetConstructor) })
 		t.Run("Contains", func(t *testing.T) { testSet_Contains(t, emptySetConstructor) })
