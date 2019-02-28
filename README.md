@@ -1,4 +1,4 @@
-# gorpi
+# TDD Set in Go (golang)
 A Set Implemented in Multiple Ways in Go With BDD Style Tests Using Only The Standard Library
 
 A friend of mine wanted to be introduced to practice pair programming, Go, and
@@ -135,5 +135,5 @@ style.
         --- PASS: TestBehavior/LLSet/String (0.00s)
 PASS
 coverage: 100.0% of statements
-ok  	github.com/crhntr/gorpi	0.013s
+ok  	github.com/crhntr/tdd-set	0.013s
 ```
