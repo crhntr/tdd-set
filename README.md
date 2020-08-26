@@ -1,15 +1,51 @@
 # TDD Set in Go (golang)
-A Set Implemented in Multiple Ways in Go With BDD Style Tests Using Only The Standard Library
+A set implemented with different underlying data structures. The testing is the intresting part of this repo. It is an example of a factory type thing to test multiple implementations of the same interface.
 
-A friend of mine wanted to be introduced to practice pair programming, Go, and
-[RPIs (Rob’s Pairing Interview)](https://builttoadapt.io/the-developer-hiring-process-is-broken-672bf273c183) in preparation for an interview. So the initial version of this codebase
-was the result of that pairing session. We paired for a little under two hours.
-Subsequently, I spent a about two hours finishing the linked list and writing
-the map implementation. I also refactored the test suite to follow a more BDD
-style.
+MapSet, LLSet, and SliceSet all implement the Set interface (defined in set_test.go). As they are all sets, they all should behave alike.
+The single test suite in set_test wraps anything that implements the Set interfaces and tests it for proper behavior.
 
+Here is what it looks like to test the is empty method:
 
-## Example Test Output
+```go
+
+type Set interface {
+	IsEmpty() bool
+    Insert(elem int) bool
+}
+
+func TestBehavior(t *testing.T) {
+	t.Run("MapSet", injectSetToTests(t, func() Set { return &gorpi.MapSet{} }))
+	t.Run("SliceSet", injectSetToTests(t, func() Set { return &gorpi.SliceSet{} }))
+	t.Run("LLSet", injectSetToTests(t, func() Set { return &gorpi.LLSet{} }))
+}
+
+func injectSetToTests(t *testing.T, newSet func() Set) func(*testing.T) {
+	return func(t *testing.T) {
+		t.Run("IsEmpty", func(t *testing.T) { testSet_IsEmpty(t, newSet) })
+        // wrapping other methods
+	}
+}
+
+func testSet_IsEmpty(t *testing.T, newSet func() Set) {
+	t.Run("when a new is created", func(t *testing.T) {
+		set := newSet()
+		if !set.IsEmpty() {
+			t.Error("it should be empty")
+		}
+	})
+
+	t.Run("after an element has been inserted inserted", func(t *testing.T) {
+		set := newSet()
+		set.Insert(420)
+
+		if set.IsEmpty() {
+			t.Error("it should not be empty")
+		}
+	})
+}
+```
+
+## Full Test Output
 ```
 === RUN   TestBehavior
 === RUN   TestBehavior/MapSet
@@ -137,3 +173,13 @@ PASS
 coverage: 100.0% of statements
 ok  	github.com/crhntr/tdd-set	0.013s
 ```
+
+## Initial Context
+
+A friend of mine wanted to be introduced to practice pair programming, Go, and
+[RPIs (Rob’s Pairing Interview)](https://builttoadapt.io/the-developer-hiring-process-is-broken-672bf273c183)
+in preparation for an interview. So the initial version of this codebase
+was the result of that pairing session. We paired for a little under two hours.
+Subsequently, I finishing the linked list and the map implementations.
+I also refactored the test suite to follow a more BDD style.
+
