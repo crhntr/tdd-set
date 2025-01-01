@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/crhntr/gorpi"
+	"github.com/crhntr/tdd-set"
 )
 
 type Set interface {
